@@ -1,0 +1,359 @@
+---
+title: "EMAE"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: fill
+    theme: lumen
+    logo: images/finance.png
+    navbar:
+       - { title: "Estimador Mensual de la Actividad Economica. Fuente: Indec",align: right}
+---
+
+<style>
+
+.navbar-inverse {
+    background-color: #000000;
+    border-color: #5d5d5d;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus {
+    color: #f3f3f3;
+    background-color: transparent;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+    color: #ffffff;
+    background-color: transparent;
+}
+
+
+</style>
+
+
+```{r}
+# "bootstrap", "cerulean", "cosmo", "darkly", "flatly", "journal", "lumen", "", "", "spacelab",
+# logo: https://convert-my-image.com/ImageConverter
+
+library(flexdashboard)
+library(dplyr)
+library(tidyverse)
+library(highcharter)
+library(rlang)
+
+
+#source('download_emae.R')
+
+dataframe = readxl::read_excel("df.xlsx")
+
+
+interanual <-    function(df, val)  {
+    valueuno = pull((df[,c(val)]))[nrow(df) - 12]
+    valuedos = pull((df[,c(val)]))[nrow(df)]
+    porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+    return(porcentaje)
+}
+
+
+most_interanual = function(df){
+    col_names = colnames(df)[1:16]
+    counter = 0
+    values = c()
+    names = c()
+    
+    for (col in col_names){
+        counter = counter + 1
+        valueuno = pull((df[,c(col)]))[nrow(df) - 12]
+        valuedos = pull((df[,c(col)]))[nrow(df)]
+        porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+        
+        values[counter] <- porcentaje
+        names[counter] <- col
+    }
+    
+    dtf = data.frame(names,values)
+    return(dtf)
+    
+}
+
+
+
+valuebox = function(porcentaje, name, color, font) {
+  valueBox(
+    value = tags$p(paste0(porcentaje, ' %'),
+                   style = color), 
+    icon = "fa-line-chart",
+    caption = tags$p(paste0('Variacion Interanual: ',str_to_title(gsub("_", " ", name))), 
+                     style = font),
+    color =  color)
+  
+}
+
+
+
+
+
+
+
+time_serie_plot = function(data, name){
+    
+    
+    highcharter::hchart(
+      data, type = "line",  highcharter::hcaes(x = as.Date(periodos), y = !!sym(name)),
+      color = "rgba(29, 53, 87, 1)",
+      name = str_to_title(gsub("_", " ", name)), 
+      id = "trend",
+      showInLegend = TRUE) %>%
+      highcharter::hc_tooltip(crosshairs = TRUE, pointFormat = "Base: {point.y}") %>%
+      
+      highcharter::hc_plotOptions(
+          line = list(
+              color = "blue",
+              marker = list(
+                  fillColor = "white",
+                  lineWidth = 2,
+                  radius=1,
+                  lineColor = NULL
+              )
+          )
+      ) %>%
+      highcharter::hc_legend(
+          layout = "vertical",
+          verticalAlign = "top",
+          align = "right",
+          floating = TRUE
+      ) %>%
+      highcharter::hc_xAxis(
+          title = list(text = ""),
+          gridLineWidth = 0,
+          dateTimeLabelFormats = list(day = '%d/%m/%Y'),
+          type = "datetime",
+          reversed = FALSE
+      ) %>%
+      highcharter::hc_yAxis(
+          title = list(text = str_to_title(gsub("_", " ", name))),
+          gridLineWidth = 0,
+          reversed = FALSE
+      ) %>%
+    
+      highcharter::hc_caption(
+          text = paste0("Serie Temporal de EMAE. Año Base Enero 2004. <br>Fuente: Indec.")) %>%
+      highcharter::hc_tooltip(
+          crosshairs = TRUE,
+          backgroundColor = "#F0F0F0",
+          shared = TRUE, 
+          borderWidth = 5
+      ) 
+}
+
+
+
+
+
+
+
+dtfs = most_interanual(dataframe)
+
+
+        
+
+
+
+
+
+```
+
+
+Panel General {data-orientation=rows}
+=====================================
+
+
+
+
+
+Row  {data-height=125}
+-----------------------------------------------------------------------
+
+### ***EMAE interanual***
+
+
+
+
+```{r}
+
+
+interanual_value = interanual(dataframe, "emae")
+
+valuebox(interanual_value, name= "EMAE",color="rgb(232, 221, 64)", font="font-size: 100%; color: #291e1e")
+
+```
+
+
+
+
+### ***Mayor suba interanual.***
+
+
+```{r}
+
+
+most_name = dtfs[order(-dtfs$values),]$names[1]
+most_value = dtfs[order(-dtfs$values),]$values[1]
+
+valuebox(most_value, name= most_name, color="	#800000", font="font-size: 100%; color: #ffffff")
+
+```
+
+
+### ***Menor suba interanual.***
+
+
+```{r}
+
+
+min_name = dtfs[order(dtfs$values),]$names[1]
+min_value = dtfs[order(dtfs$values),]$values[1]
+
+
+valuebox(min_value, name= min_name,color="#a61425", font="font-size: 100%; color: #ffffff")
+
+```
+
+
+
+
+
+Row 
+-----------------------------------------------------------------------
+
+### ***Serie Temporal Estimador Mensual de la Actividad***
+
+
+```{r}
+
+time_serie_plot(data = dataframe, name = "emae")
+
+```
+
+### ***Variaciones interanuales por sectores***
+
+
+```{r}
+
+
+dtfs %>% 
+  arrange(desc(values)) %>% 
+  hchart('column', hcaes(x = names, y = values),
+         showInLegend = F,
+         maxSize = "15%",
+         dataLabels = list(enabled = TRUE,
+                           format = '{point.y} %')) %>% 
+  hc_colorAxis(stops = color_stops(18, rev(RColorBrewer::brewer.pal(8, 'Set1'))))  %>%
+  hc_legend(enabled = FALSE) %>% 
+  highcharter::hc_plotOptions(
+      line = list(
+          color = "blue",
+          marker = list(
+              fillColor = "white",
+              lineWidth = 2,
+              radius = 1,
+              lineColor = NULL
+          )
+      )
+  ) %>% 
+  highcharter::hc_tooltip(crosshairs = TRUE, 
+                          pointFormat = "Variacion: {point.y} %",
+                          backgroundColor = "#F0F0F0",
+                          shared = TRUE, 
+                          borderWidth = 5) %>% 
+  highcharter::hc_caption(
+      text = paste0("Variacion Interanual. Año Base Enero 2004. <br>Fuente: Indec.")) %>% 
+  highcharter::hc_xAxis(
+      title = list(text = " "),
+      gridLineWidth = 0,
+      reversed = FALSE
+  ) %>%
+  highcharter::hc_yAxis(
+      title = list(text = " "),
+      gridLineWidth = 0,
+      reversed = FALSE
+  ) 
+
+```
+
+
+
+
+
+
+
+
+Sectores {data-orientation=rows}
+=====================================
+
+**EMAE por Sectores**
+
+
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Agricultura y ganaderia
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "agricultura_ganaderia")
+
+```
+
+
+
+
+
+
+### Agricultura
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "pesca")
+
+```
+
+
+
+
+
+
+### Mineria
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "mineria")
+
+```
+
+
+### Industria Manufacturera
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "industria_manufactura")
+
+```
+
+
+
+### Elec Gas y Agua
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "electricidad_gas_agua")
+
+```
+
+
+
+
+
+
+
