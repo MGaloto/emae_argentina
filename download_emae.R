@@ -4,7 +4,6 @@ library(lubridate)
 library(readxl)
 library(readr)
 library(httr)
-library(XML)
 
 
 
