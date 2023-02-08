@@ -43,9 +43,9 @@ library(rlang)
 
 
 
-#source('download_emae.R')
+source('download_emae.R')
 
-dataframe = readxl::read_excel("df.xlsx")
+#dataframe = readxl::read_excel("df.xlsx")
 
 
 interanual <-    function(df, val)  {
