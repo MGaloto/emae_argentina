@@ -14,4 +14,4 @@ jobs:
       with: 
         ref: 'main'
     - name: Render Rmarkdown
-      run: bash ./bash/render_dashboard.sh "MGaloto"
+      run: bash ./bash/render_dashboard.sh "MGaloto" "maxigaloto@hotmail.com"

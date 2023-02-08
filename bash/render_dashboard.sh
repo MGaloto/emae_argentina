@@ -5,7 +5,7 @@ echo "Rendering the dashboard..."
 Rscript -e "rmarkdown::render_site()"
 
 # Fix github issue
-git config --global --add safe.directory /__w/deploy-flex-actions/deploy-flex-actions
+git config --global --add safe.directory /__w/emae_argentina/emae_argentina
 
 if [[ "$(git status --porcelain)" != "" ]]; then
     git config --global user.name $1
