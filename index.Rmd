@@ -48,6 +48,12 @@ source('download_emae.R')
 #dataframe = readxl::read_excel("df.xlsx")
 
 
+
+colnames(dataframe)[13] = "ensenianza"
+
+
+
+
 interanual <-    function(df, val)  {
     valueuno = pull((df[,c(val)]))[nrow(df) - 12]
     valuedos = pull((df[,c(val)]))[nrow(df)]
@@ -79,17 +85,79 @@ most_interanual = function(df){
 
 
 
-valuebox = function(porcentaje, name, color, font) {
+interanual_array <-    function(df, val)  {
+    valueuno = pull((df[,c(val)]))[nrow(df) - 12]
+    valuedos = pull((df[,c(val)]))[nrow(df)]
+    porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+    return(porcentaje)
+}
+
+
+
+interanual_array <-    function(df, val)  {
+    vector_final = c()
+    counter = 0
+    for (i in 1:3) {
+
+      valueuno = pull((df[,c(val)]))[nrow(df) - (12 + counter)]
+      valuedos = pull((df[,c(val)]))[nrow(df) - counter]
+      porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+      counter = counter + 1
+      vector_final[counter] = porcentaje
+      
+    }
+    value_final = vector_final[1] - vector_final[2] - vector_final[3]
+    return(value_final)
+}
+
+
+
+tibble_economy = function(df, colnames){
+  
+  colname = c()
+  value = c()
+  
+  counter = 0
+  
+  for (col in colnames){
+    counter = counter + 1
+    colname[counter] = col
+    value[counter] = interanual_array(df, col)
+    
+  }
+  
+  return(tibble(actividad = colname, numbers = value))
+  
+  
+}
+
+
+
+
+valuebox = function(porcentaje, name, mensaje, color, font) {
   valueBox(
     value = tags$p(paste0(porcentaje, ' %'),
                    style = color), 
     icon = "fa-line-chart",
-    caption = tags$p(paste0('Variacion Interanual: ',str_to_title(gsub("_", " ", name))), 
+    caption = tags$p(paste0(mensaje, ' variacion Interanual: ',str_to_title(gsub("_", " ", name))), 
                      style = font),
     color =  color)
   
 }
 
+
+
+
+valueboxTwo = function(descripcion, name, color, font, font_letter,icon) {
+  valueBox(
+    value = tags$p(str_to_title(gsub("_", " ", name)),
+                   style = font_letter), 
+    icon = icon,
+    caption = tags$p(paste0(str_to_title(gsub("_", " ", descripcion))), 
+                     style = font),
+    color =  color)
+  
+}
 
 
 
@@ -150,15 +218,10 @@ time_serie_plot = function(data, name){
 
 
 
-
-
-
 dtfs = most_interanual(dataframe)
 
-
-        
-
-
+    
+data = tibble_economy(df= dataframe, colnames = colnames(dataframe)[c(1:16, 20)])
 
 
 
@@ -185,7 +248,7 @@ Row  {data-height=125}
 
 interanual_value = interanual(dataframe, "emae")
 
-valuebox(interanual_value, name= "EMAE",color="rgb(232, 221, 64)", font="font-size: 100%; color: #291e1e")
+valuebox(interanual_value, name= "EMAE",mensaje = "EMAE", color="rgb(232, 221, 64)", font="font-size: 100%; color: #291e1e")
 
 ```
 
@@ -201,7 +264,7 @@ valuebox(interanual_value, name= "EMAE",color="rgb(232, 221, 64)", font="font-si
 most_name = dtfs[order(-dtfs$values),]$names[1]
 most_value = dtfs[order(-dtfs$values),]$values[1]
 
-valuebox(most_value, name= most_name, color="	#800000", font="font-size: 100%; color: #ffffff")
+valuebox(most_value, name= most_name, mensaje = "Mayor" , color="	#800000", font="font-size: 100%; color: #ffffff")
 
 ```
 
@@ -216,10 +279,36 @@ min_name = dtfs[order(dtfs$values),]$names[1]
 min_value = dtfs[order(dtfs$values),]$values[1]
 
 
-valuebox(min_value, name= min_name,color="#a61425", font="font-size: 100%; color: #ffffff")
+valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="font-size: 100%; color: #ffffff")
 
 ```
 
+###
+
+```{r}
+
+
+
+max_aceleracion = data$actividad[which.max(data$numbers)]
+
+
+valueboxTwo(descripcion = "Maxima Aceleracion", name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
+
+```
+
+###
+
+```{r}
+
+
+
+max_desaceleracion =data$actividad[which.min(data$numbers)]
+
+
+valueboxTwo(descripcion = "Maxima Desaceleracion", name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
+
+
+```
 
 
 
@@ -352,9 +441,6 @@ time_serie_plot(data = dataframe, name = "industria_manufactura")
 time_serie_plot(data = dataframe, name = "electricidad_gas_agua")
 
 ```
-
-
-
 
 
 
