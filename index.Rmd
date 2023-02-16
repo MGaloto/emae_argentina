@@ -164,6 +164,8 @@ valueboxTwo = function(descripcion, name, color, font, font_letter,icon) {
 
 
 
+
+
 time_serie_plot = function(data, name){
     
     
@@ -292,7 +294,8 @@ valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="fon
 max_aceleracion = data$actividad[which.max(data$numbers)]
 
 
-valueboxTwo(descripcion = "Maxima Aceleracion", name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
+valueboxTwo(descripcion = "Maxima Aceleracion Se tienen en cuenta los ultimos 3 meses de variacion interanual.", 
+            name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
 
 ```
 
@@ -305,7 +308,9 @@ valueboxTwo(descripcion = "Maxima Aceleracion", name= max_aceleracion,color="#d6
 max_desaceleracion =data$actividad[which.min(data$numbers)]
 
 
-valueboxTwo(descripcion = "Maxima Desaceleracion", name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
+valueboxTwo(descripcion = "Maxima Desaceleracion. Se tienen en cuenta los ultimos 3 meses de variacion interanual." ,
+      name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
+
 
 
 ```
