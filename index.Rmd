@@ -5,8 +5,8 @@ output:
     vertical_layout: fill
     theme: lumen
     logo: images/finance.png
-    navbar:
-       - { title: "Estimador Mensual de la Actividad Economica. Fuente: Indec",align: right}
+
+
 ---
 
 <style>
@@ -28,6 +28,9 @@ output:
 
 
 </style>
+
+
+
 
 
 ```{r}
@@ -227,7 +230,22 @@ data = tibble_economy(df= dataframe, colnames = colnames(dataframe)[c(1:16, 20)]
 
 
 
+last_update = Sys.Date()
 ```
+
+
+
+
+<script>
+document.querySelector(".navbar-header > span.navbar-brand > span.navbar-author").innerHTML = "Estimador Mensual de la Actividad Economica. Fuente: Indec. Ultima Actualizacion:`r last_update`";
+</script>
+
+<style>
+.navbar-author {
+  position: absolute;
+  right: 1rem;
+}
+</style>
 
 
 Panel General {data-orientation=rows}
@@ -294,7 +312,7 @@ valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="fon
 max_aceleracion = data$actividad[which.max(data$numbers)]
 
 
-valueboxTwo(descripcion = "Maxima Aceleracion Se tienen en cuenta los ultimos 3 meses de variacion interanual.", 
+valueboxTwo(descripcion = "Sector de Maxima Aceleracion. (Se tienen en cuenta los ultimos 3 meses de variacion interanual).", 
             name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
 
 ```
@@ -308,7 +326,7 @@ valueboxTwo(descripcion = "Maxima Aceleracion Se tienen en cuenta los ultimos 3 
 max_desaceleracion =data$actividad[which.min(data$numbers)]
 
 
-valueboxTwo(descripcion = "Maxima Desaceleracion. Se tienen en cuenta los ultimos 3 meses de variacion interanual." ,
+valueboxTwo(descripcion = "Sector de Maxima Desaceleracion. (Se tienen en cuenta los ultimos 3 meses de variacion interanual)." ,
       name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
 
 
@@ -428,6 +446,14 @@ time_serie_plot(data = dataframe, name = "mineria")
 
 ```
 
+### Pesca
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "pesca")
+
+```
+
 
 ### Industria Manufacturera
 
@@ -444,9 +470,121 @@ time_serie_plot(data = dataframe, name = "industria_manufactura")
 
 ```{r}
 time_serie_plot(data = dataframe, name = "electricidad_gas_agua")
+```
 
+### Construccion
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "construccion")
+```
+
+
+### Comercio
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "comercio")
+```
+
+
+### Hoteles y Restaurantes
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "hoteles_restaurantes")
+```
+
+
+### Transporte y Comunicaciones
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "transporte_comunicaciones")
+```
+
+### Intermediacion Financiera
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "intermediacion_financiera")
+```
+
+### Inmobiliarias
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "inmobiliarias")
+```
+
+### Administracion Publica
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "adm_publica")
+```
+
+### Ensenianza
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "ensenianza")
+```
+
+### Serv Sociales y Salud
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "serv_sociales_salud")
+```
+
+### Serv Comunitarios y Sociales
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "serv_comunitarios_sociales")
+```
+
+### Impuestos Neto Subsidios
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "impuestos_neto_subsidios")
 ```
 
 
 
+About {data-orientation=rows}
+=====================================
+
+
+**Estimador Mensual de la Actividad Económica Dashboard**
+
+Este Dashboard tiene la finalidad de mostrarnos las principales métricas de los distintos sectores que tienen medición mensual de la evolución de la actividad económica.
+
+Podemos ver las siguientes métricas:
+
+* Tasas de crecimiento interanual por sector y global.
+* Mayor y menor crecimiento interanual.
+* Mayor y menor aceleración sectorial.
+
+**Data**
+
+Los datos utilizados provienen de la pagina oficial del [indec](https://www.indec.gob.ar/)
+
+**Packages**
+
+El dashboard utiliza los siguientes paquetes de R:
+
+-   Dashboard - [flexdashboard](https://pkgs.rstudio.com/flexdashboard/index.html)
+-   Data viz - [highcharter](https://jkunst.com/highcharter/index.html)
+-   Data Mining - [dplyr](https://dplyr.tidyverse.org/), [tidyr](https://tidyr.tidyverse.org/), [lubridate](https://lubridate.tidyverse.org/)
+
+
+
+**Contacto**
+
+-   [Linkedin](https://www.linkedin.com/in/maximilianogaloto)
+-   [Blog](https://maxi-galo.netlify.app/)
+-   [Github](https://github.com/MGaloto)
 
