@@ -3,6 +3,9 @@ name: Dashboard Refresh
 on: 
   schedule:  
     - cron:  '0 */12 * * *'
+
+permissions: read-all|write-all
+
 jobs:
   refresh-the-dashboard:
     runs-on: ubuntu-20.04 

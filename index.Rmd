@@ -343,7 +343,7 @@ dtfs %>%
          maxSize = "15%",
          dataLabels = list(enabled = TRUE,
                            format = '{point.y} %')) %>% 
-  hc_colorAxis(stops = color_stops(18, rev(RColorBrewer::brewer.pal(8, 'Set1'))))  %>%
+  hc_colorAxis(stops = color_stops(18, rev(RColorBrewer::brewer.pal(8, 'YlOrRd'))))  %>%
   hc_legend(enabled = FALSE) %>% 
   highcharter::hc_plotOptions(
       line = list(
