@@ -244,9 +244,9 @@ document.querySelector(".navbar-header > span.navbar-brand > span.navbar-author"
 <style>
 .navbar-author {
     position: absolute;
-    right: 0.5rem;
+    right: 6.5rem;
     margin-left: 10px;
-    font-size: 10px;
+    font-size: 9px;
 }
 </style>
 
