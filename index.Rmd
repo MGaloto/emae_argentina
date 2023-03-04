@@ -229,8 +229,9 @@ dtfs = most_interanual(dataframe)
 data = tibble_economy(df= dataframe, colnames = colnames(dataframe)[c(1:16, 20)])
 
 
+#as.POSIXct(Sys.time(), tz = "UTC")
 
-last_update = Sys.Date()
+last_update = Sys.time()
 ```
 
 
