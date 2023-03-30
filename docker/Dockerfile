@@ -33,7 +33,4 @@ COPY packages.json packages/
 RUN Rscript packages/install_packages.R
 
 
-# Add Rprofile with VScode settings
-COPY .Rprofile ~/
-
 EXPOSE 8787

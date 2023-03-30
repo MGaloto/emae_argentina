@@ -34,8 +34,6 @@ output:
 
 
 ```{r}
-# "bootstrap", "cerulean", "cosmo", "darkly", "flatly", "journal", "lumen", "", "", "spacelab",
-# logo: https://convert-my-image.com/ImageConverter
 
 library(flexdashboard)
 library(dplyr)
@@ -45,15 +43,10 @@ library(rlang)
 
 
 
-
 source('download_emae.R')
-
-#dataframe = readxl::read_excel("df.xlsx")
-
 
 
 colnames(dataframe)[13] = "ensenianza"
-
 
 
 
@@ -166,9 +159,6 @@ valueboxTwo = function(descripcion, name, color, font, font_letter,icon) {
 
 
 
-
-
-
 time_serie_plot = function(data, name){
     
     
@@ -228,8 +218,6 @@ dtfs = most_interanual(dataframe)
     
 data = tibble_economy(df= dataframe, colnames = colnames(dataframe)[c(1:16, 20)])
 
-
-#as.POSIXct(Sys.time(), tz = "UTC")
 
 last_update = Sys.time()
 ```
@@ -426,8 +414,6 @@ time_serie_plot(data = dataframe, name = "agricultura_ganaderia")
 
 
 
-
-
 ### Agricultura
 
 
@@ -435,8 +421,6 @@ time_serie_plot(data = dataframe, name = "agricultura_ganaderia")
 time_serie_plot(data = dataframe, name = "pesca")
 
 ```
-
-
 
 
 
@@ -563,7 +547,7 @@ About {data-orientation=rows}
 
 **Estimador Mensual de la Actividad Económica Dashboard**
 
-Este Dashboard tiene la finalidad de mostrarnos las principales métricas de los distintos sectores que tienen medición mensual de la evolución de la actividad económica.
+Este Dashboard tiene la finalidad de mostrar las principales métricas de los distintos sectores que tienen medición mensual de la evolución de la actividad económica.
 
 Podemos ver las siguientes métricas:
 

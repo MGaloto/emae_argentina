@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
   schedule:  
-    - cron:  '0 */12 * * *'
+    - cron: '0 21 1 * *' # el dia 1 del mes a las 18 hs argentina
+    # - cron:  '0 */12 * * *'
     # cada doce horas '0 */12 * * *'
     # cada 10 min '*/10 * * * *'
 
