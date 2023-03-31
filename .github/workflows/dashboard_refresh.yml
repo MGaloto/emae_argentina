@@ -9,8 +9,6 @@ on:
     # cada doce horas '0 */12 * * *'
     # cada 10 min '*/10 * * * *'
 
-    
-
 permissions: write-all
 
 jobs:
