@@ -1,0 +1,576 @@
+---
+title: "EMAE"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: fill
+    theme: lumen
+    logo: images/finance.png
+
+
+---
+
+<style>
+
+.navbar-inverse {
+    background-color: #000000;
+    border-color: #5d5d5d;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus {
+    color: #f3f3f3;
+    background-color: transparent;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+    color: #ffffff;
+    background-color: transparent;
+}
+
+
+</style>
+
+
+
+
+
+```{r}
+
+library(flexdashboard)
+library(dplyr)
+library(tidyverse)
+library(highcharter)
+library(rlang)
+
+
+source('download_emae.R')
+
+
+colnames(dataframe)[13] = "ensenianza"
+
+
+
+interanual <-    function(df, val)  {
+    valueuno = pull((df[,c(val)]))[nrow(df) - 12]
+    valuedos = pull((df[,c(val)]))[nrow(df)]
+    porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+    return(porcentaje)
+}
+
+
+most_interanual = function(df){
+    col_names = colnames(df)[1:16]
+    counter = 0
+    values = c()
+    names = c()
+    
+    for (col in col_names){
+        counter = counter + 1
+        valueuno = pull((df[,c(col)]))[nrow(df) - 12]
+        valuedos = pull((df[,c(col)]))[nrow(df)]
+        porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+        
+        values[counter] <- porcentaje
+        names[counter] <- col
+    }
+    
+    dtf = data.frame(names,values)
+    return(dtf)
+    
+}
+
+
+
+interanual_array <-    function(df, val)  {
+    valueuno = pull((df[,c(val)]))[nrow(df) - 12]
+    valuedos = pull((df[,c(val)]))[nrow(df)]
+    porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+    return(porcentaje)
+}
+
+
+
+interanual_array <-    function(df, val)  {
+    vector_final = c()
+    counter = 0
+    for (i in 1:3) {
+
+      valueuno = pull((df[,c(val)]))[nrow(df) - (12 + counter)]
+      valuedos = pull((df[,c(val)]))[nrow(df) - counter]
+      porcentaje = round(((valuedos - valueuno) / valueuno ) * 100,1)
+      counter = counter + 1
+      vector_final[counter] = porcentaje
+      
+    }
+    value_final = vector_final[1] - vector_final[2] - vector_final[3]
+    return(value_final)
+}
+
+
+
+tibble_economy = function(df, colnames){
+  
+  colname = c()
+  value = c()
+  
+  counter = 0
+  
+  for (col in colnames){
+    counter = counter + 1
+    colname[counter] = col
+    value[counter] = interanual_array(df, col)
+    
+  }
+  
+  return(tibble(actividad = colname, numbers = value))
+  
+  
+}
+
+
+
+
+valuebox = function(porcentaje, name, mensaje, color, font) {
+  valueBox(
+    value = tags$p(paste0(porcentaje, ' %'),
+                   style = color), 
+    icon = "fa-line-chart",
+    caption = tags$p(paste0(mensaje, ' variacion Interanual: ',str_to_title(gsub("_", " ", name))), 
+                     style = font),
+    color =  color)
+  
+}
+
+
+
+
+valueboxTwo = function(descripcion, name, color, font, font_letter,icon) {
+  valueBox(
+    value = tags$p(str_to_title(gsub("_", " ", name)),
+                   style = font_letter), 
+    icon = icon,
+    caption = tags$p(paste0(str_to_title(gsub("_", " ", descripcion))), 
+                     style = font),
+    color =  color)
+  
+}
+
+
+
+
+
+time_serie_plot = function(data, name){
+    
+    
+    highcharter::hchart(
+      data, type = "line",  highcharter::hcaes(x = as.Date(periodos), y = !!sym(name)),
+      color = "rgba(29, 53, 87, 1)",
+      name = str_to_title(gsub("_", " ", name)), 
+      id = "trend",
+      showInLegend = TRUE) %>%
+      highcharter::hc_tooltip(crosshairs = TRUE, pointFormat = "Base: {point.y}") %>%
+      
+      highcharter::hc_plotOptions(
+          line = list(
+              color = "blue",
+              marker = list(
+                  fillColor = "white",
+                  lineWidth = 2,
+                  radius=1,
+                  lineColor = NULL
+              )
+          )
+      ) %>%
+      highcharter::hc_legend(
+          layout = "vertical",
+          verticalAlign = "top",
+          align = "right",
+          floating = TRUE
+      ) %>%
+      highcharter::hc_xAxis(
+          title = list(text = ""),
+          gridLineWidth = 0,
+          dateTimeLabelFormats = list(day = '%d/%m/%Y'),
+          type = "datetime",
+          reversed = FALSE
+      ) %>%
+      highcharter::hc_yAxis(
+          title = list(text = str_to_title(gsub("_", " ", name))),
+          gridLineWidth = 0,
+          reversed = FALSE
+      ) %>%
+    
+      highcharter::hc_caption(
+          text = paste0("Serie Temporal de EMAE. Año Base Enero 2004. <br>Fuente: Indec.")) %>%
+      highcharter::hc_tooltip(
+          crosshairs = TRUE,
+          backgroundColor = "#F0F0F0",
+          shared = TRUE, 
+          borderWidth = 5
+      ) 
+}
+
+
+
+
+dtfs = most_interanual(dataframe)
+
+    
+data = tibble_economy(df= dataframe, colnames = colnames(dataframe)[c(1:16, 20)])
+
+
+last_update = Sys.time()
+```
+
+
+
+
+<script>
+document.querySelector(".navbar-header > span.navbar-brand > span.navbar-author").innerHTML = "Ultima Actualización:`r last_update`";
+</script>
+
+<style>
+.navbar-author {
+    position: absolute;
+    right: 6.5rem;
+    margin-left: 10px;
+    font-size: 9px;
+}
+</style>
+
+
+Panel General {data-orientation=rows}
+=====================================
+
+
+
+
+
+Row  {data-height=125}
+-----------------------------------------------------------------------
+
+### ***EMAE interanual***
+
+
+
+
+```{r}
+
+
+interanual_value = interanual(dataframe, "emae")
+
+valuebox(interanual_value, name= "EMAE",mensaje = "EMAE", color="rgb(232, 221, 64)", font="font-size: 100%; color: #291e1e")
+
+```
+
+
+
+
+### ***Mayor suba interanual.***
+
+
+```{r}
+
+
+most_name = dtfs[order(-dtfs$values),]$names[1]
+most_value = dtfs[order(-dtfs$values),]$values[1]
+
+valuebox(most_value, name= most_name, mensaje = "Mayor" , color="	#800000", font="font-size: 100%; color: #ffffff")
+
+```
+
+
+### ***Menor suba interanual.***
+
+
+```{r}
+
+
+min_name = dtfs[order(dtfs$values),]$names[1]
+min_value = dtfs[order(dtfs$values),]$values[1]
+
+
+valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="font-size: 100%; color: #ffffff")
+
+```
+
+###
+
+```{r}
+
+
+
+max_aceleracion = data$actividad[which.max(data$numbers)]
+
+
+valueboxTwo(descripcion = "Sector de Maxima Aceleracion. (Se tienen en cuenta los ultimos 3 meses de variacion interanual).", 
+            name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
+
+```
+
+###
+
+```{r}
+
+
+
+max_desaceleracion =data$actividad[which.min(data$numbers)]
+
+
+valueboxTwo(descripcion = "Sector de Maxima Desaceleracion. (Se tienen en cuenta los ultimos 3 meses de variacion interanual)." ,
+      name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
+
+
+
+```
+
+
+
+
+Row 
+-----------------------------------------------------------------------
+
+### ***Serie Temporal Estimador Mensual de la Actividad***
+
+
+```{r}
+
+time_serie_plot(data = dataframe, name = "emae")
+
+```
+
+### ***Variaciones interanuales por sectores***
+
+
+```{r}
+
+
+dtfs %>% 
+  arrange(desc(values)) %>% 
+  hchart('column', hcaes(x = names, y = values),
+         showInLegend = F,
+         maxSize = "15%",
+         dataLabels = list(enabled = TRUE,
+                           format = '{point.y} %')) %>% 
+  hc_colorAxis(stops = color_stops(18, rev(RColorBrewer::brewer.pal(8, 'YlOrRd'))))  %>%
+  hc_legend(enabled = FALSE) %>% 
+  highcharter::hc_plotOptions(
+      line = list(
+          color = "blue",
+          marker = list(
+              fillColor = "white",
+              lineWidth = 2,
+              radius = 1,
+              lineColor = NULL
+          )
+      )
+  ) %>% 
+  highcharter::hc_tooltip(crosshairs = TRUE, 
+                          pointFormat = "Variacion: {point.y} %",
+                          backgroundColor = "#F0F0F0",
+                          shared = TRUE, 
+                          borderWidth = 5) %>% 
+  highcharter::hc_caption(
+      text = paste0("Variacion Interanual. Año Base Enero 2004. <br>Fuente: Indec.")) %>% 
+  highcharter::hc_xAxis(
+      title = list(text = " "),
+      gridLineWidth = 0,
+      reversed = FALSE
+  ) %>%
+  highcharter::hc_yAxis(
+      title = list(text = " "),
+      gridLineWidth = 0,
+      reversed = FALSE
+  ) 
+
+```
+
+
+
+
+
+
+
+
+Sectores {data-orientation=rows}
+=====================================
+
+**EMAE por Sectores**
+
+
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Agricultura y ganaderia
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "agricultura_ganaderia")
+
+```
+
+
+
+
+### Agricultura
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "pesca")
+
+```
+
+
+
+
+### Mineria
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "mineria")
+
+```
+
+### Pesca
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "pesca")
+
+```
+
+
+### Industria Manufacturera
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "industria_manufactura")
+
+```
+
+
+
+### Elec Gas y Agua
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "electricidad_gas_agua")
+```
+
+### Construccion
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "construccion")
+```
+
+
+### Comercio
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "comercio")
+```
+
+
+### Hoteles y Restaurantes
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "hoteles_restaurantes")
+```
+
+
+### Transporte y Comunicaciones
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "transporte_comunicaciones")
+```
+
+### Intermediacion Financiera
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "intermediacion_financiera")
+```
+
+### Inmobiliarias
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "inmobiliarias")
+```
+
+### Administracion Publica
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "adm_publica")
+```
+
+### Ensenianza
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "ensenianza")
+```
+
+### Serv Sociales y Salud
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "serv_sociales_salud")
+```
+
+### Serv Comunitarios y Sociales
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "serv_comunitarios_sociales")
+```
+
+### Impuestos Neto Subsidios
+
+
+```{r}
+time_serie_plot(data = dataframe, name = "impuestos_neto_subsidios")
+```
+
+
+
+About {data-orientation=rows}
+=====================================
+
+
+**Estimador Mensual de la Actividad Económica Dashboard**
+
+Este Dashboard tiene la finalidad de mostrar las principales métricas de los distintos sectores que tienen medición mensual de la evolución de la actividad económica.
+
+Podemos ver las siguientes métricas:
+
+* Tasas de crecimiento interanual por sector y global.
+* Mayor y menor crecimiento interanual.
+* Mayor y menor aceleración sectorial.
+
+**Data**
+
+Los datos utilizados provienen de la pagina oficial del [indec](https://www.indec.gob.ar/)
+
+**Packages**
+
+El dashboard utiliza los siguientes paquetes de R:
+
+-   Dashboard - [flexdashboard](https://pkgs.rstudio.com/flexdashboard/index.html)
+-   Data viz - [highcharter](https://jkunst.com/highcharter/index.html)
+-   Data Mining - [dplyr](https://dplyr.tidyverse.org/), [tidyr](https://tidyr.tidyverse.org/), [lubridate](https://lubridate.tidyverse.org/)
+
+
+
+**Contacto**
+
+-   [Linkedin](https://www.linkedin.com/in/maximilianogaloto)
+-   [Blog](https://maxi-galo.netlify.app/)
+-   [Github](https://github.com/MGaloto)
+

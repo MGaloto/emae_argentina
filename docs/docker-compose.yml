@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   rstudio:
-    image: "mgaloto/flexdashiny_01" 
+    image: "mgaloto/flexdash_high:01" 
     ports:
       - "8787:8787"
     volumes:

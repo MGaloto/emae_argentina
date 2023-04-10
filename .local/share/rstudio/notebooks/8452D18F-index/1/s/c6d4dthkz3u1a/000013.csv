@@ -1,0 +1,5 @@
+"0","library(tidyverse)
+"
+"2","Error: package or namespace load failed for ‘tidyverse’ in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]):
+ namespace ‘glue’ 1.4.2 is already loaded, but >= 1.6.1 is required
+"
