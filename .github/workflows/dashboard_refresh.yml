@@ -9,7 +9,7 @@ on:
     # cada doce horas '0 */12 * * *'
     # cada 10 min '*/10 * * * *'
 
-permissions: write-repository
+permissions: write_repository
 
 jobs:
   refresh-the-dashboard:
