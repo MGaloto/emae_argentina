@@ -9,13 +9,13 @@ on:
     # cada doce horas '0 */12 * * *'
     # cada 10 min '*/10 * * * *'
 
-permissions: write-all
+permissions: write-repository
 
 jobs:
   refresh-the-dashboard:
     runs-on: ubuntu-latest  # version mas reciente de ubuntu
     container: 
-      image: mgaloto/flexdashiny_01
+      image: mgaloto/flexdash_high:01
     steps:
     - name: checkout_repo
       uses: actions/checkout@v3
