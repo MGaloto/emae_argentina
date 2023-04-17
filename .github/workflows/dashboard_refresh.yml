@@ -9,11 +9,15 @@ on:
     # cada doce horas '0 */12 * * *'
     # cada 10 min '*/10 * * * *'
 
-permissions: write_repository
 
 jobs:
   refresh-the-dashboard:
     runs-on: ubuntu-latest  # version mas reciente de ubuntu
+    permissions:
+      contents: write
+      actions: write
+      pages: write
+
     container: 
       image: mgaloto/flexdash_high:01
     steps:
