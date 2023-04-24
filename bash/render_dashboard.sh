@@ -17,5 +17,6 @@ if [[ "$(git status --porcelain)" != "" ]]; then
     git config --global user.email $2
     git add *
     git commit -m "Auto update dashboard"
+    git pull
     git push
 fi
