@@ -158,17 +158,20 @@ valueboxTwo = function(descripcion, name, color, font, font_letter,icon) {
 
 
 
-time_serie_plot = function(data, name){
+time_serie_plot = function(data, name, type){
     
     
     highcharter::hchart(
-      data, type = "line",  highcharter::hcaes(x = as.Date(periodos), y = !!sym(name)),
+      data, 
+      type = "line",  
+      highcharter::hcaes(x = as.Date(periodos), y = !!sym(name)),
       color = "rgba(29, 53, 87, 1)",
       name = str_to_title(gsub("_", " ", name)), 
       id = "trend",
       showInLegend = TRUE) %>%
-      highcharter::hc_tooltip(crosshairs = TRUE, pointFormat = "Base: {point.y}") %>%
-      
+      highcharter::hc_tooltip(
+        crosshairs = TRUE, 
+        pointFormat = "Base: {point.y}") %>%
       highcharter::hc_plotOptions(
           line = list(
               color = "blue",
@@ -200,7 +203,9 @@ time_serie_plot = function(data, name){
       ) %>%
     
       highcharter::hc_caption(
-          text = paste0("Serie Temporal de EMAE. Año Base Enero 2004. <br>Fuente: Indec.")) %>%
+          text = paste0("Serie Temporal de EMAE. ",
+                        type,
+                        ". <br>Fuente: Indec.")) %>%
       highcharter::hc_tooltip(
           crosshairs = TRUE,
           backgroundColor = "#F0F0F0",
@@ -214,11 +219,83 @@ time_serie_plot = function(data, name){
 
 dtfs = most_interanual(dataframe)
 
-    
-data = tibble_economy(df= dataframe, colnames = colnames(dataframe)[c(1:16, 20)])
 
 
 last_update = Sys.time()
+
+data_box = function(df, cols){
+  
+  colname = c()
+  value = c()
+    
+  date = max(df$periodos)
+  year = year(date)
+  month = month(date)
+  date_before_1 = date - months(12)
+  year_before_1 = year(date_before_1)
+  month_before_1 = month(date_before_1)
+  
+  date_2 = date - months(1)
+  year_2 = year(date_2)
+  month_2 = month(date_2)
+  date_before_2 = date_2 - months(12)
+  year_before_2 = year(date_before_2)
+  month_before_2 = month(date_before_2)
+  
+  counter = 0
+  
+  for (col in cols){
+    counter = counter + 1
+    colname[counter] = col
+    
+    actual_data = dataframe[[col]][dataframe[["year"]] == year & dataframe[["Mes"]] == month]
+    before_data = dataframe[[col]][dataframe[["year"]] == year_before_1 & dataframe[["Mes"]] == month_before_1]
+    diff_data = actual_data - before_data
+    interanual_data = round((diff_data / before_data),4)*100
+  
+    actual_data_2 = dataframe[[col]][dataframe[["year"]] == year_2 & dataframe[["Mes"]] == month_2]
+    before_data_2 = dataframe[[col]][dataframe[["year"]] == year_before_2 & dataframe[["Mes"]] == month_before_2]
+    diff_data_2 = actual_data_2 - before_data_2
+    interanual_data_2 = round((diff_data_2 / before_data_2),4)*100
+
+    indice = interanual_data - interanual_data_2
+    
+    value[counter] = indice
+    
+  }
+  return(tibble(actividad = colname, numbers = value))
+  
+}
+
+data = data_box(dataframe, colnames(dataframe)[c(1:16, 20)])
+
+
+
+get_interanual_df = function(df, cols){
+  
+  columnas <- list()
+
+  for (col in cols) {
+    columna <- round((
+    (df[[col]] / lag(df[[col]], 12) - 1) * 100)[13:nrow(df)],2)
+    columnas[[col]] <- columna
+  }
+  
+  mi_tibble <- as_tibble(columnas)
+  mi_tibble$periodos = df$periodos[13:nrow(df)]
+  return(mi_tibble)
+
+  
+}
+
+
+interanual_df = get_interanual_df(
+  dataframe,
+  colnames(dataframe)[c(1:16, 20)]
+)
+
+
+
 ```
 
 
@@ -233,7 +310,7 @@ document.querySelector(".navbar-header > span.navbar-brand > span.navbar-author"
     position: absolute;
     right: 6.5rem;
     margin-left: 10px;
-    font-size: 9px;
+    font-size: 10px;
 }
 </style>
 
@@ -302,7 +379,7 @@ valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="fon
 max_aceleracion = data$actividad[which.max(data$numbers)]
 
 
-valueboxTwo(descripcion = "Sector de Maxima Aceleracion. (Se tienen en cuenta los ultimos 3 meses de variacion interanual).", 
+valueboxTwo(descripcion = "Sector de Maxima Aceleracion.", 
             name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
 
 ```
@@ -316,7 +393,7 @@ valueboxTwo(descripcion = "Sector de Maxima Aceleracion. (Se tienen en cuenta lo
 max_desaceleracion =data$actividad[which.min(data$numbers)]
 
 
-valueboxTwo(descripcion = "Sector de Maxima Desaceleracion. (Se tienen en cuenta los ultimos 3 meses de variacion interanual)." ,
+valueboxTwo(descripcion = "Sector de Maxima Desaceleracion." ,
       name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
 
 
@@ -334,7 +411,9 @@ Row
 
 ```{r}
 
-time_serie_plot(data = dataframe, name = "emae")
+time_serie_plot(data = dataframe, 
+                name = "emae",
+                type = "Año Base Enero 2004")
 
 ```
 
@@ -391,7 +470,7 @@ dtfs %>%
 
 
 
-Sectores {data-orientation=rows}
+Sectores Base {data-orientation=rows}
 =====================================
 
 **EMAE por Sectores**
@@ -406,7 +485,9 @@ Column {.tabset}
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "agricultura_ganaderia")
+time_serie_plot(data = dataframe, 
+                name = "agricultura_ganaderia",
+                type = "Año Base Enero 2004")
 
 ```
 
@@ -417,7 +498,9 @@ time_serie_plot(data = dataframe, name = "agricultura_ganaderia")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "pesca")
+time_serie_plot(data = dataframe,
+                name = "pesca",
+                type = "Año Base Enero 2004")
 
 ```
 
@@ -428,7 +511,9 @@ time_serie_plot(data = dataframe, name = "pesca")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "mineria")
+time_serie_plot(data = dataframe, 
+                name = "mineria",
+                type = "Año Base Enero 2004")
 
 ```
 
@@ -436,7 +521,9 @@ time_serie_plot(data = dataframe, name = "mineria")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "pesca")
+time_serie_plot(data = dataframe,
+                name = "pesca",
+                type = "Año Base Enero 2004")
 
 ```
 
@@ -445,7 +532,9 @@ time_serie_plot(data = dataframe, name = "pesca")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "industria_manufactura")
+time_serie_plot(data = dataframe, 
+                name = "industria_manufactura",
+                type = "Año Base Enero 2004")
 
 ```
 
@@ -455,14 +544,18 @@ time_serie_plot(data = dataframe, name = "industria_manufactura")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "electricidad_gas_agua")
+time_serie_plot(data = dataframe, 
+                name = "electricidad_gas_agua",
+                type = "Año Base Enero 2004")
 ```
 
 ### Construccion
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "construccion")
+time_serie_plot(data = dataframe, 
+                name = "construccion",
+                type = "Año Base Enero 2004")
 ```
 
 
@@ -470,7 +563,9 @@ time_serie_plot(data = dataframe, name = "construccion")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "comercio")
+time_serie_plot(data = dataframe,
+                name = "comercio",
+                type = "Año Base Enero 2004")
 ```
 
 
@@ -478,7 +573,9 @@ time_serie_plot(data = dataframe, name = "comercio")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "hoteles_restaurantes")
+time_serie_plot(data = dataframe,
+                name = "hoteles_restaurantes",
+                type = "Año Base Enero 2004")
 ```
 
 
@@ -486,57 +583,274 @@ time_serie_plot(data = dataframe, name = "hoteles_restaurantes")
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "transporte_comunicaciones")
+time_serie_plot(data = dataframe, 
+                name = "transporte_comunicaciones",
+                type = "Año Base Enero 2004")
 ```
 
 ### Intermediacion Financiera
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "intermediacion_financiera")
+time_serie_plot(data = dataframe, 
+                name = "intermediacion_financiera",
+                type = "Año Base Enero 2004")
 ```
 
 ### Inmobiliarias
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "inmobiliarias")
+time_serie_plot(data = dataframe,
+                name = "inmobiliarias",
+                type = "Año Base Enero 2004")
 ```
 
 ### Administracion Publica
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "adm_publica")
+time_serie_plot(data = dataframe,
+                name = "adm_publica",
+                type = "Año Base Enero 2004")
 ```
 
 ### Ensenianza
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "ensenianza")
+time_serie_plot(data = dataframe, 
+                name = "ensenianza",
+                type = "Año Base Enero 2004")
 ```
 
 ### Serv Sociales y Salud
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "serv_sociales_salud")
+time_serie_plot(data = dataframe, 
+                name = "serv_sociales_salud",
+                type = "Año Base Enero 2004")
 ```
 
 ### Serv Comunitarios y Sociales
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "serv_comunitarios_sociales")
+time_serie_plot(data = dataframe, 
+                name = "serv_comunitarios_sociales",
+                type = "Año Base Enero 2004")
 ```
 
 ### Impuestos Neto Subsidios
 
 
 ```{r}
-time_serie_plot(data = dataframe, name = "impuestos_neto_subsidios")
+time_serie_plot(data = dataframe,
+                name = "impuestos_neto_subsidios",
+                type = "Año Base Enero 2004")
 ```
+
+
+
+
+
+Sectores Interanual {data-orientation=rows}
+=====================================
+
+**EMAE por Sectores Interanual**
+
+
+
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Agricultura y ganaderia
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "agricultura_ganaderia",
+                type = "Variacion Interanual")
+
+```
+
+
+
+
+### Agricultura
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "pesca",
+                type = "Variacion Interanual")
+
+```
+
+
+
+
+### Mineria
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "mineria",
+                type = "Variacion Interanual")
+
+```
+
+### Pesca
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "pesca",
+                type = "Variacion Interanual")
+
+```
+
+
+### Industria Manufacturera
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "industria_manufactura",
+                type = "Variacion Interanual")
+
+```
+
+
+
+### Elec Gas y Agua
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "electricidad_gas_agua",
+                type = "Variacion Interanual")
+```
+
+### Construccion
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "construccion",
+                type = "Variacion Interanual")
+```
+
+
+### Comercio
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "comercio",
+                type = "Variacion Interanual")
+```
+
+
+### Hoteles y Restaurantes
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "hoteles_restaurantes",
+                type = "Variacion Interanual")
+```
+
+
+### Transporte y Comunicaciones
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "transporte_comunicaciones",
+                type = "Variacion Interanual")
+```
+
+### Intermediacion Financiera
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "intermediacion_financiera",
+                type = "Variacion Interanual")
+```
+
+### Inmobiliarias
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "inmobiliarias",
+                type = "Variacion Interanual")
+```
+
+### Administracion Publica
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "adm_publica",
+                type = "Variacion Interanual")
+```
+
+### Ensenianza
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "ensenianza",
+                type = "Variacion Interanual")
+```
+
+### Serv Sociales y Salud
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "serv_sociales_salud",
+                type = "Variacion Interanual")
+```
+
+### Serv Comunitarios y Sociales
+
+
+```{r}
+time_serie_plot(data = interanual_df, 
+                name = "serv_comunitarios_sociales",
+                type = "Variacion Interanual")
+```
+
+### Impuestos Neto Subsidios
+
+
+```{r}
+time_serie_plot(data = interanual_df,
+                name = "impuestos_neto_subsidios",
+                type = "Variacion Interanual")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -546,7 +860,7 @@ About {data-orientation=rows}
 
 **Estimador Mensual de la Actividad Económica Dashboard**
 
-Este Dashboard tiene la finalidad de mostrar las principales métricas de los distintos sectores que tienen medición mensual de la evolución de la actividad económica.
+Este Dashboard tiene la finalidad de mostrar las principales métricas de los sectores que tienen medición mensual de la evolución de la actividad económica.
 
 Podemos ver las siguientes métricas:
 
