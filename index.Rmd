@@ -296,6 +296,54 @@ interanual_df = get_interanual_df(
 
 
 
+
+get_variance = function(df, cols, range_period){
+    
+  fecha_inicio = max(df$periodos) - months(range_period)
+  fecha_fin = max(df$periodos)
+  data = df[df$periodos >= fecha_inicio & df$periodos <= fecha_fin,]
+  varianza = apply(data[, c(cols)], 2, var)
+  data_varianza = data.frame(variables = names(varianza),
+                             varianza = varianza,
+                             stringsAsFactors = FALSE)
+  return(data_varianza)
+
+}
+  
+get_mean = function(df, cols, range_period){
+    
+  fecha_inicio = max(df$periodos) - months(range_period)
+  fecha_fin = max(df$periodos)
+  
+  data = df[df$periodos >= fecha_inicio & df$periodos <= fecha_fin,]
+  
+  promedios = colMeans(data[, c(cols)], na.rm = FALSE)
+  
+  data_promedios = data.frame(variables = names(promedios),
+                             promedios = promedios,
+                             stringsAsFactors = FALSE)
+  return(data_promedios)
+
+}
+
+df_promedios = get_mean(
+  df=interanual_df,
+  cols=colnames(dataframe)[c(1:16, 20)],
+  range_period = 2
+)
+
+
+df_var = get_variance(
+  df=interanual_df,
+  cols=colnames(dataframe)[c(1:16, 20)],
+  range_period = 5
+)
+
+
+
+
+
+
 ```
 
 
@@ -470,7 +518,7 @@ dtfs %>%
 
 
 
-Sectores Base {data-orientation=rows}
+Sectores Base 
 =====================================
 
 **EMAE por Sectores**
@@ -478,8 +526,48 @@ Sectores Base {data-orientation=rows}
 
 
 
+Rowerbase
+-------------------------------------
+<style>
+#rowerbase {
+  flex: 200 576 0px!important;
+}
+</style>
+
+### {style="flex-basis: 20%"}
+
+
+```{r}
+
+ranking_mean = df_promedios %>% 
+  arrange(desc(promedios)) %>% 
+  pull(variables) %>% 
+  head(3)
+
+ranking_mean_desc = df_promedios %>% 
+  arrange(desc(promedios)) %>% 
+  pull(variables) %>% 
+  tail(3)
+
+```
+
+<h3>Tasas Interanuales Promedios</h3>
+
+Para los últimos 3 meses se realizo el promedio de la variación interanual del crecimiento de todos los sectores y los primeros tres son los siguientes:
+
+* `r str_to_title(gsub("_", " ", ranking_mean[1]))`
+* `r str_to_title(gsub("_", " ", ranking_mean[2]))`
+* `r str_to_title(gsub("_", " ", ranking_mean[3]))`
+
+Los tres sectores con una menor variación promedio son los siguientes:
+
+* `r str_to_title(gsub("_", " ", ranking_mean_desc[1]))`
+* `r str_to_title(gsub("_", " ", ranking_mean_desc[2]))`
+* `r str_to_title(gsub("_", " ", ranking_mean_desc[3]))`
+
+
 Column {.tabset}
------------------------------------------------------------------------
+-------------------------------------
 
 ### Agricultura y ganaderia
 
@@ -649,22 +737,67 @@ time_serie_plot(data = dataframe,
 time_serie_plot(data = dataframe,
                 name = "impuestos_neto_subsidios",
                 type = "Año Base Enero 2004")
+variab="a"
 ```
 
 
 
 
 
-Sectores Interanual {data-orientation=rows}
+Sectores Interanual
 =====================================
 
 **EMAE por Sectores Interanual**
 
 
 
+Roweria
+-------------------------------------
+<style>
+#roweria {
+  flex: 200 576 0px!important;
+}
+</style>
+
+### {style="flex-basis: 20%"}
+
+
+
+
+```{r}
+
+ranking_var = df_var %>% 
+  arrange(desc(varianza)) %>% 
+  pull(variables) %>% 
+  head(3)
+
+ranking_var_desc = df_var %>% 
+  arrange(desc(varianza)) %>% 
+  pull(variables) %>% 
+  tail(3)
+
+```
+
+<h3>Tasas Interanuales Varianza</h3>
+
+Para los últimos 6 meses se realizo la varianza de la variación interanual del crecimiento de todos los sectores y los primeros tres en orden son los siguientes:
+
+* `r str_to_title(gsub("_", " ", ranking_var[1]))`
+* `r str_to_title(gsub("_", " ", ranking_var[2]))`
+* `r str_to_title(gsub("_", " ", ranking_var[3]))`
+
+Cabe destacar que la varianza mide la dispsersion de los datos respecto a su promedio, por lo tanto, estos tres sectores con mayor varianza son los que mas sufren cambios.
+
+Los tres sectores con menor variacion son los siguientes:
+
+* `r str_to_title(gsub("_", " ", ranking_var_desc[1]))`
+* `r str_to_title(gsub("_", " ", ranking_var_desc[2]))`
+* `r str_to_title(gsub("_", " ", ranking_var_desc[3]))`
+
+
 
 Column {.tabset}
------------------------------------------------------------------------
+-------------------------------------
 
 ### Agricultura y ganaderia
 
@@ -835,20 +968,6 @@ time_serie_plot(data = interanual_df,
                 name = "impuestos_neto_subsidios",
                 type = "Variacion Interanual")
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

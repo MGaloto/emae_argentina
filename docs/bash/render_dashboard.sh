@@ -1,6 +1,10 @@
+
+LRED='\033[1;31m'
+LGREEN='\033[1;32m'
+
 echo "Rendering the dashboard..."
 if [[ "$1" = ""  || "$2" = "" ]] ; then
-    echo "The git user.name and/or user.email are missing"
+    echo "${LRED}The git user.name and/or user.email are missing${LRED}"
     exit 0
 else
     echo "Git user.name is $1"
@@ -19,4 +23,5 @@ if [[ "$(git status --porcelain)" != "" ]]; then
     git commit -m "Auto update dashboard"
     git pull
     git push
+    echo "${LGREEN}Ok git commands${LGREEN}"
 fi
