@@ -211,7 +211,22 @@ time_serie_plot = function(data, name, type){
           backgroundColor = "#F0F0F0",
           shared = TRUE, 
           borderWidth = 5
-      ) 
+      ) %>% 
+    highcharter::hc_navigator(
+    enabled = TRUE,
+    outlineColor = "gray",
+    outlineWidth = 2,
+    series = list(
+      color = "#6790e6",
+      lineWidth = 2,
+      type = "areaspline",
+      fillColor = "#c5e1fa"
+    ),
+    handles = list(
+      backgroundColor = "#051942",
+      borderColor = "#1143ad"
+    )
+  )
 }
 
 
