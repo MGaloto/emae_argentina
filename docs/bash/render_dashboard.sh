@@ -1,6 +1,6 @@
 
-LRED='\033[1;31m'
-LGREEN='\033[1;32m'
+LRED=$(printf '\033[1;31m')
+LGREEN=$(printf '\033[1;32m')
 
 echo "..........Rendering the dashboard..............."
 if [[ "$1" = ""  || "$2" = "" ]] ; then
