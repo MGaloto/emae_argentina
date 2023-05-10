@@ -2,13 +2,13 @@
 LRED='\033[1;31m'
 LGREEN='\033[1;32m'
 
-echo "Rendering the dashboard..."
+echo "..........Rendering the dashboard..............."
 if [[ "$1" = ""  || "$2" = "" ]] ; then
     echo "${LRED}The git user.name and/or user.email are missing${LRED}"
     exit 0
 else
-    echo "Git user.name is $1"
-    echo "Git user.email is $2"
+    echo "${LGREEN}Git user.name is: $1${LGREEN}"
+    echo "${LGREEN}Git user.email is: $2${LGREEN}"
 fi
 
 Rscript -e "rmarkdown::render_site()"
@@ -24,4 +24,6 @@ if [[ "$(git status --porcelain)" != "" ]]; then
     git pull
     git push
     echo "${LGREEN}Ok git commands${LGREEN}"
+else
+    echo "${LGREEN}OK${LGREEN}"
 fi
