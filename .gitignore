@@ -8,3 +8,5 @@ app
 .Rhistory
 .local
 .config
+VER.txt
+workcorrelation

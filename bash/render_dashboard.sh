@@ -23,7 +23,7 @@ if [[ "$(git status --porcelain)" != "" ]]; then
     git commit -m "Auto update dashboard"
     git pull
     git push
-    echo "${LGREEN}Ok git commands${LGREEN}"
+    echo "${LGREEN}Se registraron cambios en el repositorio.${LGREEN}"
 else
-    echo "${LGREEN}OK${LGREEN}"
+    echo "OK Auto update dashboard. ${LRED}No${LRED} se registraron cambios en el ${LGREEN}repositorio${LGREEN}."
 fi

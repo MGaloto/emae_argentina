@@ -356,10 +356,16 @@ df_var = get_variance(
 
 
 
+# 
+# 
+# ggplotly(corr_cross(dataframe[,colnames(dataframe)[c(1:16, 20)]], 
+#                  max_pvalue = 0.05, type = 1, top = 60))
 
-
+# Definir una paleta de colores personalizada con azul y rojo más fuertes
 
 ```
+
+
 
 
 
@@ -533,18 +539,20 @@ dtfs %>%
 
 
 
-Sectores Base 
+Series Temporales
 =====================================
 
-**EMAE por Sectores**
+**Series Temporales (Base 2004=100).**
 
 
 
 
-Rowerbase
+
+
+Roweria
 -------------------------------------
 <style>
-#rowerbase {
+#roweria {
   flex: 200 576 0px!important;
 }
 </style>
@@ -552,33 +560,39 @@ Rowerbase
 ### {style="flex-basis: 20%"}
 
 
+
+
 ```{r}
 
-ranking_mean = df_promedios %>% 
-  arrange(desc(promedios)) %>% 
+ranking_var = df_var %>% 
+  arrange(desc(varianza)) %>% 
   pull(variables) %>% 
   head(3)
 
-ranking_mean_desc = df_promedios %>% 
-  arrange(desc(promedios)) %>% 
+ranking_var_desc = df_var %>% 
+  arrange(desc(varianza)) %>% 
   pull(variables) %>% 
   tail(3)
 
 ```
 
-<h3>Tasas Interanuales Promedios</h3>
+<h3>Tasas Interanuales Varianza</h3>
 
-Para los últimos 3 meses se realizo el promedio de la variación interanual del crecimiento de todos los sectores y los primeros tres son los siguientes:
+Para los últimos 6 meses se realizo la varianza de la variación interanual del crecimiento de todos los sectores y los primeros tres en orden son los siguientes:
 
-* `r str_to_title(gsub("_", " ", ranking_mean[1]))`
-* `r str_to_title(gsub("_", " ", ranking_mean[2]))`
-* `r str_to_title(gsub("_", " ", ranking_mean[3]))`
+* `r str_to_title(gsub("_", " ", ranking_var[1]))`
+* `r str_to_title(gsub("_", " ", ranking_var[2]))`
+* `r str_to_title(gsub("_", " ", ranking_var[3]))`
 
-Los tres sectores con una menor variación promedio son los siguientes:
+Cabe destacar que la varianza mide la dispsersion de los datos respecto a su promedio, por lo tanto, estos tres sectores con mayor varianza son los que mas sufren cambios en la variación de su producción de bienes y servicios.
 
-* `r str_to_title(gsub("_", " ", ranking_mean_desc[1]))`
-* `r str_to_title(gsub("_", " ", ranking_mean_desc[2]))`
-* `r str_to_title(gsub("_", " ", ranking_mean_desc[3]))`
+Los tres sectores con menor variación son los siguientes:
+
+* `r str_to_title(gsub("_", " ", ranking_var_desc[1]))`
+* `r str_to_title(gsub("_", " ", ranking_var_desc[2]))`
+* `r str_to_title(gsub("_", " ", ranking_var_desc[3]))`
+
+
 
 
 Column {.tabset}
@@ -759,17 +773,18 @@ variab="a"
 
 
 
-Sectores Interanual
+Interanual
 =====================================
 
-**EMAE por Sectores Interanual**
+**EMAE por Sectores. Series temporales con tasa interanual.**
 
 
 
-Roweria
+
+Rowerbase
 -------------------------------------
 <style>
-#roweria {
+#rowerbase {
   flex: 200 576 0px!important;
 }
 </style>
@@ -777,37 +792,36 @@ Roweria
 ### {style="flex-basis: 20%"}
 
 
-
-
 ```{r}
 
-ranking_var = df_var %>% 
-  arrange(desc(varianza)) %>% 
+ranking_mean = df_promedios %>% 
+  arrange(desc(promedios)) %>% 
   pull(variables) %>% 
   head(3)
 
-ranking_var_desc = df_var %>% 
-  arrange(desc(varianza)) %>% 
+ranking_mean_desc = df_promedios %>% 
+  arrange(desc(promedios)) %>% 
   pull(variables) %>% 
   tail(3)
 
 ```
 
-<h3>Tasas Interanuales Varianza</h3>
+<h3>Tasas Interanuales Promedios</h3>
 
-Para los últimos 6 meses se realizo la varianza de la variación interanual del crecimiento de todos los sectores y los primeros tres en orden son los siguientes:
+Para los últimos 3 meses se realizo el promedio de la variación interanual del crecimiento de todos los sectores y los primeros tres son los siguientes:
 
-* `r str_to_title(gsub("_", " ", ranking_var[1]))`
-* `r str_to_title(gsub("_", " ", ranking_var[2]))`
-* `r str_to_title(gsub("_", " ", ranking_var[3]))`
+* `r str_to_title(gsub("_", " ", ranking_mean[1]))`
+* `r str_to_title(gsub("_", " ", ranking_mean[2]))`
+* `r str_to_title(gsub("_", " ", ranking_mean[3]))`
 
-Cabe destacar que la varianza mide la dispsersion de los datos respecto a su promedio, por lo tanto, estos tres sectores con mayor varianza son los que mas sufren cambios.
+Los tres sectores con una menor variación promedio son los siguientes:
 
-Los tres sectores con menor variacion son los siguientes:
+* `r str_to_title(gsub("_", " ", ranking_mean_desc[1]))`
+* `r str_to_title(gsub("_", " ", ranking_mean_desc[2]))`
+* `r str_to_title(gsub("_", " ", ranking_mean_desc[3]))`
 
-* `r str_to_title(gsub("_", " ", ranking_var_desc[1]))`
-* `r str_to_title(gsub("_", " ", ranking_var_desc[2]))`
-* `r str_to_title(gsub("_", " ", ranking_var_desc[3]))`
+
+
 
 
 
@@ -983,6 +997,13 @@ time_serie_plot(data = interanual_df,
                 name = "impuestos_neto_subsidios",
                 type = "Variacion Interanual")
 ```
+
+
+
+
+
+
+
 
 
 

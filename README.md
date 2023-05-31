@@ -60,7 +60,6 @@ Por ultimo, se va a utilizar [Docker](https://www.docker.com/) para crear una im
 ├── download_emae.R
 ├── .github
 ├── docker
-├── docs
 └── images
 ```
 
@@ -70,7 +69,6 @@ Por ultimo, se va a utilizar [Docker](https://www.docker.com/) para crear una im
 - `download_emae.R` contiene el ETL.
 - `.github` contiene el WorkFlow.
 - `docker` contiene todos los archivos de configuración de imágenes de Docker (por ejemplo, Dockerfiley algunos archivos auxiliares)
-- `docs` se usa para almacenar los archivos del tablero renderizados.
 - Todas las imágenes del archivo README se almacenarán en `images`.
 
 ## Github Actions
