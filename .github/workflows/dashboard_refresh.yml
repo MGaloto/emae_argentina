@@ -28,6 +28,3 @@ jobs:
     - name: Render Rmarkdown
       run: bash ./bash/render_dashboard.sh "MGaloto" "maxigaloto@hotmail.com"
 
-    retry:
-      max-runs: 2
-      min-seconds: 600
