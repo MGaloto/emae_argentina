@@ -356,12 +356,7 @@ df_var = get_variance(
 
 
 
-# 
-# 
-# ggplotly(corr_cross(dataframe[,colnames(dataframe)[c(1:16, 20)]], 
-#                  max_pvalue = 0.05, type = 1, top = 60))
-
-# Definir una paleta de colores personalizada con azul y rojo más fuertes
+#
 
 ```
 
