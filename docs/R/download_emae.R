@@ -39,7 +39,11 @@ get_dataframe = function(url, time_out){
     
     emae = emae[4:nrow(emae) - 2,]
     colnames(emae) = emae[1,]
+<<<<<<< HEAD
     emae = emae[3:nrow(emae), 3:ncol(emae)]
+=======
+    emae = emae[4:nrow(emae), 3:ncol(emae)]
+>>>>>>> cbf1bc973bb92870dd0835cdad31827c4ee271e1
     emae = na.omit(emae)
     emae = convert_integer(emae)
     colnames(emae) = c("agricultura_ganaderia",
