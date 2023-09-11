@@ -356,9 +356,11 @@ df_var = get_variance(
 
 
 
-#
+periodo = substr(max(dataframe$periodos), 1,7)
+
 
 ```
+
 
 
 
@@ -382,7 +384,7 @@ document.querySelector(".navbar-header > span.navbar-brand > span.navbar-author"
 Panel General {data-orientation=rows}
 =====================================
 
-
+**Ultima actualizacion con atos del periodo de: `r periodo`**
 
 
 
@@ -443,7 +445,7 @@ valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="fon
 max_aceleracion = data$actividad[which.max(data$numbers)]
 
 
-valueboxTwo(descripcion = "Sector de Maxima Aceleracion.", 
+valueboxTwo(descripcion = "Sector de Maxima Aceleracion. Se compara la tasa interanual del mes anterior con el actual mes.", 
             name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
 
 ```
@@ -457,7 +459,7 @@ valueboxTwo(descripcion = "Sector de Maxima Aceleracion.",
 max_desaceleracion =data$actividad[which.min(data$numbers)]
 
 
-valueboxTwo(descripcion = "Sector de Maxima Desaceleracion." ,
+valueboxTwo(descripcion = "Sector de Maxima Desaceleracion. Se compara la tasa interanual del mes anterior con el actual mes." ,
       name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
 
 
