@@ -4,7 +4,6 @@ output:
   flexdashboard::flex_dashboard:
     vertical_layout: fill
     theme: lumen
-    logo: images/finance.png
 
 
 ---
@@ -158,7 +157,7 @@ valueboxTwo = function(descripcion, name, color, font, font_letter,icon) {
 
 
 
-time_serie_plot = function(data, name, type){
+time_serie_plot = function(data, name, type, value="Base"){
     
     
     highcharter::hchart(
@@ -171,7 +170,7 @@ time_serie_plot = function(data, name, type){
       showInLegend = TRUE) %>%
       highcharter::hc_tooltip(
         crosshairs = TRUE, 
-        pointFormat = "Base: {point.y}") %>%
+        pointFormat = paste0(value,": {point.y}")) %>%
       highcharter::hc_plotOptions(
           line = list(
               color = "blue",
@@ -367,24 +366,10 @@ periodo = substr(max(dataframe$periodos), 1,7)
 
 
 
-<script>
-document.querySelector(".navbar-header > span.navbar-brand > span.navbar-author").innerHTML = "Ultima Actualización:`r last_update`";
-</script>
-
-<style>
-.navbar-author {
-    position: absolute;
-    right: 6.5rem;
-    margin-left: 10px;
-    font-size: 10px;
-}
-</style>
-
-
 Panel General {data-orientation=rows}
 =====================================
 
-**Ultima actualizacion con atos del periodo de: `r periodo`**
+**Ultima actualización con datos del `r periodo`**
 
 
 
@@ -831,7 +816,8 @@ Column {.tabset}
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "agricultura_ganaderia",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
 
 ```
 
@@ -844,7 +830,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "pesca",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 
 ```
 
@@ -857,7 +845,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "mineria",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 
 ```
 
@@ -867,7 +857,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "pesca",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 
 ```
 
@@ -878,7 +870,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "industria_manufactura",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 
 ```
 
@@ -890,7 +884,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "electricidad_gas_agua",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Construccion
@@ -899,7 +895,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "construccion",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 
@@ -909,7 +907,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "comercio",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 
@@ -919,7 +919,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "hoteles_restaurantes",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 
@@ -929,7 +931,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "transporte_comunicaciones",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Intermediacion Financiera
@@ -938,7 +942,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "intermediacion_financiera",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Inmobiliarias
@@ -947,7 +953,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "inmobiliarias",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Administracion Publica
@@ -956,7 +964,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "adm_publica",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Ensenianza
@@ -965,7 +975,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "ensenianza",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Serv Sociales y Salud
@@ -974,7 +986,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "serv_sociales_salud",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Serv Comunitarios y Sociales
@@ -983,7 +997,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df, 
                 name = "serv_comunitarios_sociales",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 ### Impuestos Neto Subsidios
@@ -992,7 +1008,9 @@ time_serie_plot(data = interanual_df,
 ```{r}
 time_serie_plot(data = interanual_df,
                 name = "impuestos_neto_subsidios",
-                type = "Variacion Interanual")
+                type = "Variacion Interanual",
+                value = "Interanual")
+
 ```
 
 
