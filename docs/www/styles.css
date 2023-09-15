@@ -1,0 +1,32 @@
+.skin-blue .main-header .navbar{
+  background-color: black;
+  background-size: cover;}
+ 
+.skin-blue .main-header .logo {
+  background-color: black;}
+
+.skin-blue .main-header .navbar .sidebar-toggle {
+  background-color: black;}
+
+.a .sidebar {
+  background-color: black;}
+
+.skin-blue .main-sidebar {
+  background-color: #031923;}
+  
+.skin-blue .sidebar-menu>li.active>a {
+    color: #fff;
+    background: #1e282c;
+    border-left-color: #1e282c;
+}
+
+.skin-blue .main-header .logo:hover {
+    background-color: black;
+}
+
+.skin-blue .main-header .navbar .sidebar-toggle:hover {
+    background-color: black;
+}
+
+
+
