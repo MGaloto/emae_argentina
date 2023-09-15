@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 version: "3.9"
 services:
   rstudio:
@@ -11,18 +10,4 @@ services:
         target: "/home/rstudio"
       - type: "bind"
         source: "C:/Program Files/RStudio/bin"
-=======
-version: "3.9"
-services:
-  rstudio:
-    image: "mgaloto/flexdash_high:01" 
-    ports:
-      - "8787:8787"
-    volumes:
-      - type: "bind"
-        source: "C:/Users/maxig/Desktop/Carpetas/Trabajos en R/EMAE Argentina"
-        target: "/home/rstudio"
-      - type: "bind"
-        source: "C:/Program Files/RStudio/bin"
->>>>>>> 5294e00480bd05b50cfbec10e52af6f7b80d2713
         target: "/home/rstudio/.config/rstudio"
