@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 library(tidyverse)
 library(lubridate)
@@ -87,3 +88,94 @@ rm(df_emae)
 
 
 
+=======
+
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(readr)
+library(httr)
+
+
+
+
+convert_integer = function(dataframe) {
+  dataframe[ , c(1:(ncol(dataframe)))] = apply(dataframe[ , c(1:(ncol(dataframe)))], 2,
+                                               function(x) as.numeric(as.character(x)))
+  return(
+    dataframe
+  )
+}
+
+
+
+get_dataframe = function(url, time_out){
+  
+  GET(url, 
+      timeout(time_out),
+      write_disk(file <- tempfile(fileext = ".xls")))
+  
+  emae = read_excel(file)
+  
+  if (grepl("mensual", url)) {
+    
+    emae = emae[6:nrow(emae) - 2,3]
+    colnames(emae) = "emae"
+    emae = na.omit(emae)
+    emae = convert_integer(emae)
+    dataframe = emae %>% 
+      mutate_if(is.numeric, round)
+    
+  } else {
+    
+    emae = emae[4:nrow(emae) - 2,]
+    colnames(emae) = emae[1,]
+    emae = emae[3:nrow(emae), 3:ncol(emae)]
+    emae = na.omit(emae)
+    emae = convert_integer(emae)
+    colnames(emae) = c("agricultura_ganaderia",
+                       "pesca",
+                       "mineria",
+                       "industria_manufactura",
+                       "electricidad_gas_agua",
+                       "construccion",
+                       "comercio",
+                       "hoteles_restaurantes",
+                       "transporte_comunicaciones",
+                       "intermediacion_financiera",
+                       "inmobiliarias",
+                       "adm_publica",
+                       "enseñanza",
+                       "serv_sociales_salud",
+                       "serv_comunitarios_sociales",
+                       "impuestos_neto_subsidios")
+    periodos = seq(as.Date("2004/1/1"), 
+                   by = "month", 
+                   length.out = nrow(emae))
+    emae$periodos = as.Date(periodos)
+    emae$year     = year(emae$periodos)
+    emae$Mes      = as.numeric(substr(emae$periodos, 6 , 7))
+    
+    dataframe = emae %>% 
+      mutate_if(is.numeric, round)
+    
+  }
+  
+  return(dataframe)
+}
+
+
+url_sectors = "https://www.indec.gob.ar/ftp/cuadros/economia/sh_emae_actividad_base2004.xls"
+
+url = "https://www.indec.gob.ar/ftp/cuadros/economia/sh_emae_mensual_base2004.xls"
+
+
+df_emae = get_dataframe(url = url, time_out = 20000)
+dataframe = get_dataframe(url = url_sectors, time_out = 20000)
+dataframe$emae = df_emae$emae
+
+rm(df_emae)
+
+
+
+>>>>>>> 5294e00480bd05b50cfbec10e52af6f7b80d2713
