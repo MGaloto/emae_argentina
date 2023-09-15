@@ -2,8 +2,8 @@
 title: "EMAE"
 output: 
   flexdashboard::flex_dashboard:
+    orientation: columns
     vertical_layout: fill
-    theme: lumen
 
 
 ---
@@ -34,7 +34,7 @@ output:
 
 
 
-```{r}
+```{r setup, include=FALSE}
 
 library(flexdashboard)
 library(dplyr)
