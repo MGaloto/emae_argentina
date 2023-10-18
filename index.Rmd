@@ -215,17 +215,16 @@ time_serie_plot = function(data, name, type, value="Base"){
       ) %>% 
     highcharter::hc_navigator(
     enabled = TRUE,
-    outlineColor = "gray",
-    outlineWidth = 2,
+    outlineWidth = 1,
     series = list(
-      color = "#6790e6",
-      lineWidth = 2,
+      color = "#bccbeb",
+      lineWidth = 1,
       type = "areaspline",
-      fillColor = "#c5e1fa"
+      fillColor = "#e1eefa"
     ),
     handles = list(
-      backgroundColor = "#051942",
-      borderColor = "#1143ad"
+      backgroundColor = "#d8dde8",
+      borderColor = "#d8dde8"
     )
   )
 }
@@ -422,38 +421,6 @@ min_value = dtfs[order(dtfs$values),]$values[1]
 valuebox(min_value, name= min_name, mensaje = "Menor",color="#a61425", font="font-size: 100%; color: #ffffff")
 
 ```
-
-###
-
-```{r}
-
-
-
-max_aceleracion = data$actividad[which.max(data$numbers)]
-
-
-valueboxTwo(descripcion = "Sector de Maxima Aceleracion. Se compara la tasa interanual del mes anterior con el actual mes.", 
-            name= max_aceleracion,color="#d67315", font="font-size: 100%; color: #ffffff", font_letter="font-size: 50%; color: #ffffff", icon="fa-arrow-up")
-
-```
-
-###
-
-```{r}
-
-
-
-max_desaceleracion =data$actividad[which.min(data$numbers)]
-
-
-valueboxTwo(descripcion = "Sector de Maxima Desaceleracion. Se compara la tasa interanual del mes anterior con el actual mes." ,
-      name= max_desaceleracion,color="#3b6dd9", font="font-size: 100%; color: #ffffff", font_letter="font-size: 100%; color: #ffffff",icon="fa-arrow-down")
-
-
-
-```
-
-
 
 
 Row 
