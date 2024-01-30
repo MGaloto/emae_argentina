@@ -11,3 +11,4 @@ app
 VER.txt
 workcorrelation
 .Rproj.user
+.env
