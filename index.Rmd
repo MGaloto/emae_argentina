@@ -1013,6 +1013,7 @@ Los datos utilizados provienen de la pagina oficial del [indec](https://www.inde
 
 **Packages**
 
+
 El dashboard utiliza los siguientes paquetes de R:
 
 -   Dashboard - [flexdashboard](https://pkgs.rstudio.com/flexdashboard/index.html)
