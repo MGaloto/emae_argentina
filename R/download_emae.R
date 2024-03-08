@@ -28,7 +28,7 @@ get_dataframe = function(url, time_out){
   
   if (grepl("mensual", url)) {
     
-    emae = emae[6:nrow(emae) - 2,3]
+    emae = emae[6:nrow(emae) - 1,3]
     colnames(emae) = "emae"
     emae = na.omit(emae)
     emae = convert_integer(emae)
@@ -37,7 +37,7 @@ get_dataframe = function(url, time_out){
     
   } else {
     
-    emae = emae[4:nrow(emae) - 2,]
+    emae = emae[4:nrow(emae) - 1,]
     colnames(emae) = emae[1,]
     emae = emae[3:nrow(emae), 3:ncol(emae)]
     emae = na.omit(emae)
