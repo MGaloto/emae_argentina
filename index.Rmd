@@ -437,7 +437,7 @@ time_serie_plot(data = dataframe,
 
 ```
 
-### ***Variaciones interanuales por sectores***
+### ***Variacion interanual por sector. Periodo: `r periodo`***
 
 
 ```{r}
